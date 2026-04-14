@@ -46,7 +46,14 @@ body {
     pointer-events: auto;
     will-change: transform;
     user-select: none;
-    touch-action: none; /* Important for draggables on mobile */
+    touch-action: pan-y; /* Allow vertical scrolling on mobile, GSAP handles drag */
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    .obstruction {
+        touch-action: none; /* On mobile let GSAP fully control touch for dragging */
+    }
 }
 
 .obstruction:active {
