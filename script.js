@@ -1,5 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     const overlay = document.getElementById("overlay");
+    
+    // Audio Helper
+    const playRustle = () => {
+        const sound = new Audio("leave rustle.mp3");
+        sound.volume = 0.5;
+        sound.play().catch(() => {});
+    };
+
     // Configuration
     // Render more items overall since the layout now extends far down vertically
     const numImages = window.innerWidth > 768 ? 150 : 75; // Render less graphics on mobile for performance
@@ -21,10 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Cumulatively push the image upward and scale it slightly on every hover
         obElement.addEventListener('mouseenter', () => {
-            // Play rustle sound
-            const sound = new Audio("leave rustle.mp3");
-            sound.volume = 0.5;
-            sound.play().catch(() => {});
+            playRustle();
 
             gsap.to(img, { 
                 y: "-=6", 
@@ -58,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
             type: "x,y",
             edgeResistance: 0.2, // Low edge resistance allows users to easily drag out of screen
             onPress: function() {
+                playRustle();
                 // Instantly bring to front
                 topZIndex++;
                 this.target.style.zIndex = topZIndex;
@@ -75,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const vy = this.deltaY * 8;
 
                 if (Math.abs(vx) > 10 || Math.abs(vy) > 10) {
+                    playRustle();
                     // Throw it off! If sufficient flick velocity is detected, let it slide out
                     gsap.to(this.target, {
                         x: `+=${vx * 6}`,
