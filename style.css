@@ -1,0 +1,61 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow-x: hidden; /* Prevent horizontal scroll when dragging out of viewport */
+    background-color: #000;
+    font-family: sans-serif;
+}
+
+#container {
+    position: relative;
+    width: 100vw;
+}
+
+#underlay {
+    position: relative;
+    width: 100%;
+    z-index: 0;
+    pointer-events: none; /* Make it non-interactive */
+}
+
+#base-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    pointer-events: none;
+}
+
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none; /* Let events pass to children */
+    overflow: hidden; /* Hide things thrown completely off the element area */
+}
+
+.obstruction {
+    position: absolute;
+    cursor: grab;
+    pointer-events: auto;
+    will-change: transform;
+    user-select: none;
+    touch-action: none; /* Important for draggables on mobile */
+}
+
+.obstruction:active {
+    cursor: grabbing;
+}
+
+.obstruction img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none; /* prevent default dragging of image elements */
+}
