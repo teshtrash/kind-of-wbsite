@@ -119,4 +119,57 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // Automatic Reveal on Double Click / Double Tap
+    let lastTapTime = 0;
+
+    const handleReveal = () => {
+        // Shuffle obstructions to mimic a human picking them randomly
+        const obstructions = Array.from(document.querySelectorAll('.obstruction'));
+        obstructions.sort(() => Math.random() - 0.5);
+        
+        let cumulativeDelay = 0;
+
+        obstructions.forEach((ob, index) => {
+            // Human-like delay between each leaf interaction
+            cumulativeDelay += Math.random() * 0.1 + 0.05;
+            
+            // Random direction outward, sweeping effect
+            const dirX = Math.random() > 0.5 ? 1 : -1;
+            const dirY = Math.random() > 0.5 ? 1 : -1;
+            const vx = dirX * (Math.random() * window.innerWidth * 0.8 + 200);
+            const vy = dirY * (Math.random() * window.innerHeight * 0.8 + 200);
+            
+            gsap.to(ob, {
+                x: `+=${vx}`,
+                y: `+=${vy}`,
+                rotation: `+=${Math.random() * 360 - 180}`,
+                opacity: 0,
+                duration: 1.5 + Math.random(), // Slower and variable
+                ease: "power2.out",
+                delay: cumulativeDelay,
+                onStart: () => {
+                    // Play rustle occasionally so it sounds like real sweeping
+                    if (index % 5 === 0) playRustle();
+                },
+                onComplete: () => {
+                   ob.style.pointerEvents = "none";
+                }
+            });
+        });
+    };
+
+    document.addEventListener("dblclick", handleReveal);
+
+    document.addEventListener("touchstart", (e) => {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTapTime;
+        if (tapLength < 300 && tapLength > 0) {
+            handleReveal();
+            // Prevent default to avoid double fire if browser emulates dblclick
+            if (e.cancelable) e.preventDefault();
+        }
+        lastTapTime = currentTime;
+    }, { passive: false });
+
 });
